@@ -63,7 +63,7 @@
                 <label for="coupon" class="sr-only">Coupon code</label>
                 <input v-model="coupon" type="text" name="coupon" class="form-control input-lg text-center" id="coupon" placeholder="CODE">
                 <input type="hidden" name="utm_source" value="samples">
-                <input type="hidden" name="utm_medium" value="offline">
+                <input type="hidden" name="utm_medium" value="promo">
                 <input type="hidden" name="utm_campaign" value="samples">
                 <input type="hidden" name="checkCoupon" value="1">
               </div>
@@ -151,7 +151,7 @@
         get: function(key){
           return (typeof this.strings[key][this.lg] != "undefined") ?  this.strings[key][this.lg] : this.strings[key]['en'];
         },
-        submit: function(e){
+        submit: function(event){
           if(this.coupon == null || this.coupon == ''){
             this.error = this.get('error');
             alert(this.error);
