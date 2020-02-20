@@ -36,7 +36,7 @@ body {
   text-shadow: 0 1px 3px rgba(0,0,0,.5);
 }
 .bg-img-1 {
-  background: url("../img/bg-dog.png") center no-repeat;
+  background: url("../img/chien.jpg") center no-repeat;
   background-size: cover;
 }
 
@@ -70,7 +70,7 @@ body {
 .masthead-brand {
   margin-top: 10px;
   margin-bottom: 10px;
-  max-width: 200px;
+  max-width: 32px;
 }
 
 .masthead-nav > li {
@@ -166,4 +166,43 @@ body {
   .cover-container {
     width: 700px;
   }
+}
+
+/* HIDE RADIO */
+[type=radio] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  padding: 5px;
+}
+
+/* IMAGE STYLES */
+[type=radio] + img {
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 32px 32px 32px 32px;
+  -moz-border-radius: 32px 32px 32px 32px;
+  -webkit-border-radius: 32px 32px 32px 32px;
+  margin: 6px;
+}
+
+/* CHECKED STYLES */
+[type=radio]:checked + img {
+  border: 3px solid #FFFFFF;
+
+
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.logo {
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }

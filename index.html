@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89570951-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-89570951-1');
+    </script>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,6 +34,10 @@
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <script src="assets/js/ie-emulation-modes-warning.js"></script>
     <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.core.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/fechanique/material-loading/master/material-loading.css">
+    <script src="https://cdn.rawgit.com/fechanique/material-loading/master/material-loading.js"></script>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -53,34 +67,69 @@
           </div>
 
           <div class="inner cover">
-            <h1 class="cover-heading">{{ get('title') }}</h1>
-            <p class="lead">{{ get('action') }}</p>
+
+            <img src="img/logo.png" class="logo">
 
 
-            <form action="https://www.dogchef.be" method="get" @submit.prevent="submit">
 
-              <div class="form-group">
-                <label for="coupon" class="sr-only">Coupon code</label>
-                <input v-model="coupon" type="text" name="coupon" class="form-control input-lg text-center" id="coupon" placeholder="CODE">
-                <input type="hidden" name="utm_source" value="samples">
-                <input type="hidden" name="utm_medium" value="promo">
-                <input type="hidden" name="utm_campaign" value="samples">
-                <input type="hidden" name="checkCoupon" value="1">
+
+            <form :action="'https://'+countryData.website" method="get" @submit.prevent="submit">
+
+              <transition name="fade">
+                <div>
+
+                    <div>
+                      <p class="lead">{{ get('country') }}</p>
+
+                        <div class="form-group">
+                          <label v-for="c in countries">
+                            <input v-model="country" @click="selectLanguage(c.mainLanguage)" type="radio" name="country" :value="c.code">
+                            <img :src="'./img/' + c.image">
+                          </label>
+
+                          </div>
+                        </div>
+                  </div>
+                </transition>
+
+
+
+            <transition name="fade">
+              <div v-if="country">
+
+                <div>
+                  <p class="lead">{{ get('action') }}</p>
+
+                  <div class="form-group">
+                    <label for="coupon" class="sr-only">Coupon code</label>
+                    <input v-model="coupon" type="text" name="coupon" class="form-control input-lg text-center" id="coupon" placeholder="CODE">
+                    <input type="hidden" name="utm_source" value="samples">
+                    <input type="hidden" name="utm_medium" value="samples">
+                    <input type="hidden" name="utm_campaign" value="samples">
+                    <input type="hidden" name="checkCoupon" value="1">
+                  </div>
+
+                  <button type="submit" class="btn btn-lg btn-default">{{ get('submit') }}</button>
+                  <div style="margin-top:20px;">
+                    <a :href="countryData.website + '?utm_medium=samples&utm_source=offline&utm_campaign=nocoupon'">{{get('no_coupon')}}</a>
+                  </div>
+                </div>
+
               </div>
+            </transition>
 
-              <button type="submit" class="btn btn-lg btn-default">{{ get('submit') }}</button>
 
-              <div style="margin-top:20px;">
-                <a href="https://www.dogchef.be?utm_medium=samples&utm_source=offline&utm_campaign=nocoupon">{{get('no_coupon')}}</a>
-              </div>
+
+
+
 
 
             </form>
           </div>
 
-          <div class="mastfoot">
+          <div class="mastfoot" v-if="country">
             <div class="inner">
-              <p>Dog Chef - 078 48 40 08 - <a href="mailto:hello@dogchef.be">hello@dogchef.be</a></p>
+              <p>Dog Chef - {{countryData.phone}} - <a :href="'mailto:'+countryData.email">{{countryData.email}}</a></p>
             </div>
           </div>
 
@@ -106,6 +155,41 @@
         message: 'Hello Vue!',
         error: null,
         coupon: null,
+        country: null,
+        countries: [
+          {
+            code:'BE',
+            image:'006-belgium.png',
+            mainLanguage: null,
+            phone: '02 808 13 58',
+            email: 'hello@dogchef.be',
+            website: 'www.dogchef.be'
+          },
+          {
+            code:'FR',
+            image:'001-france.png',
+            mainLanguage: 'fr',
+            phone: '07 57 93 59 24',
+            email: 'hello@dogchef.fr',
+            website: 'www.dogchef.fr'
+          },
+          {
+            code:'LU',
+            image:'008-luxembourg.png',
+            mainLanguage: null,
+            phone: '+352 28 48 74 78',
+            email: 'hello@dogchef.lu',
+            website: 'www.dogchef.lu'
+          },
+          {
+            code:'NL',
+            image:'007-netherlands.png',
+            mainLanguage: 'nl',
+            phone: '+32 2 808 13 58',
+            email: 'hello@dogchef.nl',
+            website: 'www.dogchef.nl'
+          }
+        ],
         lg: 'en',
         strings: {
           title: {
@@ -117,6 +201,11 @@
             en: "Dog Chef - Fresh Pet Food",
             fr: "Dog Chef - Nourriture Fraiche pour chiens",
             nl: "Dog Chef - Verse hondenvoeding",
+          },
+          country: {
+            en: "Select your country",
+            fr: "Sélectionnez votre pays",
+            nl: "Kies uw land",
           },
           action: {
             en: "Enter your coupon code to secure your discount",
@@ -147,9 +236,26 @@
           this.lg = userLang;
         }
       },
+      computed: {
+        countryData: function(){
+          if(this.country == null){
+            return {
+              phone:null,
+              email:null,
+              website:null
+            };
+          }
+          return _.find(this.countries, {code: this.country});
+        }
+      },
       methods: {
         get: function(key){
           return (typeof this.strings[key][this.lg] != "undefined") ?  this.strings[key][this.lg] : this.strings[key]['en'];
+        },
+        selectLanguage: function(language){
+          if(language != null){
+            this.lg = language;
+          }
         },
         submit: function(event){
           if(this.coupon == null || this.coupon == ''){
@@ -157,6 +263,7 @@
             alert(this.error);
             return false;
           }
+          materialLoading(true);
           var $form = $(event.target);
           $form.submit();
         }
