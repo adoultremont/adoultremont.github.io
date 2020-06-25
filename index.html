@@ -43,13 +43,16 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style>
+      [v-cloak] {display: none}
+    </style>
   </head>
 
   <body>
 
     <div class="site-wrapper bg-img-1" id="app">
 
-      <div class="site-wrapper-inner">
+      <div class="site-wrapper-inner" v-cloak>
 
         <div class="cover-container">
 
@@ -79,7 +82,8 @@
                 <div>
 
                     <div>
-                      <p class="lead">{{ get('country') }}</p>
+                      <p v-if="country" class="lead">{{ countryData.code }}</p>
+                      <p v-else class="lead">{{ get('country') }}</p>
 
                         <div class="form-group">
                           <label v-for="c in countries">
@@ -235,6 +239,28 @@
         if(userLang == "fr" || userLang == "nl"){
           this.lg = userLang;
         }
+
+        var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+        self = this;
+
+        urlParams = {};
+        while (match = search.exec(query)){
+          urlParams[decode(match[1])] = decode(match[2]);
+          if(decode(match[1]) == "c"){
+            self.coupon = decode(match[2]);
+          }
+          if(decode(match[1]) == "l"){
+            self.selectLanguage(match[2].toLocaleLowerCase());
+          }
+        }
+          
+        
+        
       },
       computed: {
         countryData: function(){
